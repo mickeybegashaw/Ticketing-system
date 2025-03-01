@@ -5,7 +5,6 @@ import { User } from '../models/User.js';
 
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET
 
 // Signup
 router.post("/signup", async (req, res) => {
@@ -27,7 +26,7 @@ router.post("/login", async (req, res) => {
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
-  const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
+  const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
   res.json({ token });
 });
 
