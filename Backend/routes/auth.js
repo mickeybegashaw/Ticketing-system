@@ -1,33 +1,62 @@
-import express from 'express'
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { User } from '../models/User.js';
-
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { User } from "../models/User.js";
 
 const router = express.Router();
 
-// Signup
+// Signup Route
 router.post("/signup", async (req, res) => {
-  const { name, email, password, role } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const user = new User({ name, email, password: hashedPassword, role });
+    const { name, email, password, role } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already exists. Please log in." });
+    }
+
+    const userRole = role || "user";
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({ name, email, password: hashedPassword, role: userRole });
     await user.save();
-    res.status(201).json({ message: "User registered!" });
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({
+      message: "User registered successfully!",
+      token,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 });
 
-// Login
+// Login Route
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    return res.status(401).json({ error: "Invalid credentials" });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ error: "Something went wrong!" });
   }
-  const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-  res.json({ token });
 });
 
 export default router;
