@@ -1,11 +1,11 @@
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
-const UseUserContext=()=>{
+const UseAuth=()=>{
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useMenuContext must be used within a MenuContextProvider");
+    throw new Error("useAuth must be used within a AuthContextProvider");
   }
   return context;
 }
-export default UseUserContext;
+export default UseAuth;
