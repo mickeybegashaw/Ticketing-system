@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import HeroImage from "../assets/hero.jpg";
 const Hero = () => {
   return (
@@ -11,10 +12,18 @@ const Hero = () => {
           create tickets, while admins manage and track them, ensuring smooth
           workflows and faster resolutions.
         </p>
-        <button className="self-start text-white bg-sky-600 hover:bg-sky-400 py-2 px-6 mt-5 ">Get Started</button>
+        <Link to="/login">
+          <button className="self-start text-white bg-sky-600 hover:bg-sky-400 py-2 px-6 mt-5 ">
+            Get Started
+          </button>
+        </Link>
       </div>
       <div className="w-full md:w-1/2">
-        <img className="w-[30rem] animate-pulse" src={HeroImage} alt="hero image" />
+        <img
+          className="w-[30rem] animate-pulse"
+          src={HeroImage}
+          alt="hero image"
+        />
       </div>
     </div>
   );
