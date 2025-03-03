@@ -1,12 +1,12 @@
-import DashboardLayout from '../layout/DashboardLayout'
+import SideBar from "../components/dashbordComponents/SideBar";
+import DashboardLayout from "../layout/DashboardLayout";
 
 const AdminDashboard = () => {
   return (
     <DashboardLayout>
-
-      AdminDashboard
+      <SideBar />
     </DashboardLayout>
-  )
-}
+  );
+};
 
-export default AdminDashboard
+export default AdminDashboard;
