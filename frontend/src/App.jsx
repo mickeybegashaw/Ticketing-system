@@ -15,7 +15,6 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         
-        {/* Public Routes */}
         <Route 
           path="/login" 
           element={user ? (user.role === "admin" ? <Navigate to="/admin" /> : <Navigate to="/user" />) : <Login />} 
