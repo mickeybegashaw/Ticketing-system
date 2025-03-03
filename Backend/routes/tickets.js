@@ -26,8 +26,8 @@ router.post("/", authMiddleware, async (req, res) => {
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const tickets = req.user.role === "admin"
-      ? await Ticket.find()
-      : await Ticket.find({ userId: req.user.userId });
+    ? await Ticket.find().sort({ createdAt: -1 }) // Newest first
+    : await Ticket.find({ userId: req.user.userId });
 
     res.json(tickets);
   } catch (error) {

@@ -9,6 +9,7 @@ const AdminDashboard = () => {
     "/admin/tickets",
     "/admin/closed-tickets",
     "/admin/in-progress-tickets",
+    "/admin/opened-tickets"
   ];
   const isNestedRoute = nestedRoutes.includes(location.pathname);
 

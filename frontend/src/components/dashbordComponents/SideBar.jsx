@@ -1,5 +1,6 @@
 import AvaterImg from "../../assets/avater.png";
 import UseAuth from "../../hooks/useAuth";
+import { RiChatNewFill } from "react-icons/ri";
 import {
   FaBars,
   FaTimes,
@@ -55,6 +56,23 @@ const SideBar = () => {
               </Link>
             </li>
 
+             {/* New tickets - Admin only */}
+             {user?.role === "admin" && (
+              <li>
+                <Link
+                  to="/admin/opened-tickets"
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
+                    isActive("/admin/opened-tickets")
+                      ? "bg-white text-sky-600"
+                      : "hover:bg-white hover:text-sky-600"
+                  }`}
+                >
+                  <RiChatNewFill size={20} />{" "}
+                  <span className="hidden md:block">New Tickets</span>
+                </Link>
+              </li>
+            )}
+
             {/* All Tickets link - Admin only */}
             {user?.role === "admin" && (
               <li>
@@ -105,6 +123,7 @@ const SideBar = () => {
                 </Link>
               </li>
             )}
+           
 
             {/* User-specific link */}
             {user?.role === "user" && (
