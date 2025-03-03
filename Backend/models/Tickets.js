@@ -9,6 +9,6 @@ const ticketSchema = new mongoose.Schema({
     enum: ["Open", "In Progress", "Closed"],
     default: "Open",
   },
-});
+},{timestamps:true});
 
 export const Ticket = mongoose.model("Ticket", ticketSchema);
