@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import UseAuth from "../hooks/useAuth";
+import UseAuth from "../../hooks/useAuth";
 import axios from "axios";
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
-import LoginImage from "../assets/login.svg";
-
+import LoginImage from '../../assets/login.svg'
 const Login = () => {
   const { setUser } = UseAuth();
   const [email, setEmail] = useState("");

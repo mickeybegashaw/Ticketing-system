@@ -9,7 +9,7 @@ const SideBar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="pt-20 p-6 bg-sky-600 text-white h-screen w-[20%] shadow-lg">
+    <div className="pt-20 p-6 bg-sky-600 text-white h-screen w-[20%] shadow-lg ">
       <div className="flex flex-col items-center mt-5">
         <div className="flex items-center gap-3 mb-5">
           <img

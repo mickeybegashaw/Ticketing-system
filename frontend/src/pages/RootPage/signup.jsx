@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import SignupImage from "../assets/login.svg";
-import UseAuth from "../hooks/useAuth";
+import SignupImage from "../../assets/login.svg";
+import UseAuth from "../../hooks/useAuth";
 import axios from "axios";
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -38,7 +38,7 @@ const Signup = () => {
       });
 
       if (response.status >= 200 && response.status < 300) {
-        const {  user } = response.data; 
+        const { user } = response.data;
 
         localStorage.setItem("user", JSON.stringify(user));
 
@@ -60,7 +60,11 @@ const Signup = () => {
 
   return (
     <div className="w-full flex h-screen">
-      <img src={SignupImage} alt="Sign up" className="w-[40%] hidden md:block" />
+      <img
+        src={SignupImage}
+        alt="Sign up"
+        className="w-[40%] hidden md:block"
+      />
       <div className="flex flex-col justify-center items-center w-full md:w-[60%] bg-sky-100 px-10">
         <h1 className="text-2xl font-bold">Create Account</h1>
 

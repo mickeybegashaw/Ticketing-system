@@ -1,6 +1,6 @@
-import Features from "../components/Features";
-import Hero from "../components/Hero";
-import RootLayout from "../layout/RootLayout";
+import Features from "../../components/Features";
+import Hero from "../../components/Hero";
+import RootLayout from "../../layout/RootLayout";
 
 function Home() {
   return (
