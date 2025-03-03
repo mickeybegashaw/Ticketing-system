@@ -38,10 +38,8 @@ const Signup = () => {
       });
 
       if (response.status >= 200 && response.status < 300) {
-        const { token, user } = response.data; // Extract token & user
+        const {  user } = response.data; 
 
-        // Store token separately
-        localStorage.setItem("token", token);
         localStorage.setItem("user", JSON.stringify(user));
 
         setUser(user);
