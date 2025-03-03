@@ -6,48 +6,51 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
 const Signup = () => {
-  const { setUser } = UseAuth(); 
+  const { setUser } = UseAuth();
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(null);  
-  const [loading, setLoading] = useState(false);  
-  const [success, setSuccess] = useState(false);  
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-     if (password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match");
+      setLoading(false); // Reset loading
       return;
     }
 
     try {
       setError(null);
       setLoading(true);
-      setSuccess(false);  
+      setSuccess(false);
 
-       const response = await axios.post(`${baseUrl}/api/auth/signup`, {
+      const response = await axios.post(`${baseUrl}/api/auth/signup`, {
         name,
         email,
         password,
-        role: role || "user",  
+        role: role || "user",
       });
 
-       if (response.status >= 200 && response.status < 300) {
-        setError(null);
+      if (response.status >= 200 && response.status < 300) {
+        const { token, user } = response.data; // Extract token & user
+
+        // Store token separately
+        localStorage.setItem("token", token);
+        localStorage.setItem("user", JSON.stringify(user));
+
+        setUser(user);
         setSuccess(true);
-
-         localStorage.setItem("token", response.data.token);
-
-         setUser({ name, email, role: role || "user" });
       } else {
         setError(response.data.error || "An error occurred during signup.");
       }
     } catch (error) {
-       setError(
+      setError(
         error.response?.data?.error ||
           error.response?.data?.message ||
           "An error occurred. Please try again."
@@ -59,11 +62,7 @@ const Signup = () => {
 
   return (
     <div className="w-full flex h-screen">
-      <img
-        src={SignupImage}
-        alt="Sign up"
-        className="w-[40%] hidden md:block"
-      />
+      <img src={SignupImage} alt="Sign up" className="w-[40%] hidden md:block" />
       <div className="flex flex-col justify-center items-center w-full md:w-[60%] bg-sky-100 px-10">
         <h1 className="text-2xl font-bold">Create Account</h1>
 
@@ -115,13 +114,8 @@ const Signup = () => {
             <option value="admin">Admin</option>
           </select>
 
-           {success && (
-            <p className="text-green-500">
-              Sign up successful!
-            </p>
-          )}
-
-           {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">Sign up successful!</p>}
+          {error && <p className="text-red-500">{error}</p>}
 
           <button
             type="submit"
