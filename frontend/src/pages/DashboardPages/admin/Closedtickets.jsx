@@ -1,7 +1,7 @@
 
 const Closedtickets = () => {
   return (
-      <div className="flex justify-center items-center  h-screen">hello closed tickets</div>
+      <div className="flex flex-col items-center mt-24">hello closed tickets</div>
   )
 }
 

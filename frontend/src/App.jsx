@@ -1,5 +1,10 @@
 import Home from "./pages/RootPage/home";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Login from "./pages/RootPage/login";
 import SignUp from "./pages/RootPage/signup";
 import UserDashboard from "./pages/DashboardPages/user/UserDashboard";
@@ -8,7 +13,7 @@ import UseAuth from "./hooks/useAuth";
 import Tickets from "./pages/DashboardPages/admin/Tickes";
 import Closedtickets from "./pages/DashboardPages/admin/Closedtickets";
 import Inprogress from "./pages/DashboardPages/admin/Inprogress";
-
+import UserTickets from "./pages/DashboardPages/user/Tickes";
 const App = () => {
   const { user } = UseAuth();
   console.log(user);
@@ -44,8 +49,10 @@ const App = () => {
               <Navigate to="/login" />
             )
           }
-        />
-        
+        >
+          <Route path="tickets" element={< UserTickets />} />
+        </Route>
+
         {/* Admin route with nested routes */}
         <Route
           path="/admin"

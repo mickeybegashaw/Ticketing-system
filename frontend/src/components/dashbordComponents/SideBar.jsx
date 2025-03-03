@@ -1,5 +1,7 @@
 import AvaterImg from "../../assets/avater.png";
 import UseAuth from "../../hooks/useAuth";
+import { FaBars, FaTimes, FaTicketAlt, FaTimesCircle, FaSpinner, FaTachometerAlt } from "react-icons/fa";
+
 import { Link, useLocation } from "react-router-dom";
 
 const SideBar = () => {
@@ -9,18 +11,18 @@ const SideBar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="pt-20 p-6 bg-sky-600 text-white h-screen w-[20%] shadow-lg ">
+    <div className="pt-20 p-3 md:p-6 bg-sky-600 text-white h-screen w-fit md:w-[20%] shadow-lg ">
       <div className="flex flex-col items-center mt-5">
-        <div className="flex items-center gap-3 mb-5">
+        <div className="flex items-center flex-col md:flex-rol gap-3 mb-5 md:mt-16">
           <img
             src={AvaterImg}
             alt="Avatar"
-            className="w-16 h-16 rounded-full border-2 border-white"
+            className="w-6 h-6 md:w-12 md:h-12 rounded-full border-2 border-white"
           />
-          <span className="text-2xl font-bold">{user?.role === "admin" ? "Admin" : "User"}</span>
+          <span className="text-lg md:text-xl font-bold">{user?.role === "admin" ? "Admin" : "User"}</span>
         </div>
 
-        <div className="mb-5 text-center text-sm text-gray-300">
+        <div className="hidden md:block mb-5 text-center text-sm text-gray-300">
           <p>Hello, {user?.name}!</p>
           <p className="text-xs">{user?.email}</p>
         </div>
@@ -38,7 +40,7 @@ const SideBar = () => {
                     : "hover:bg-white hover:text-sky-600"
                 }`}
               >
-                <i className="fa fa-dashboard"></i> Dashboard
+                <FaTachometerAlt size={20} /> <span className="hidden md:block">Dashboard</span> 
               </Link>
             </li>
 
@@ -53,7 +55,7 @@ const SideBar = () => {
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                  <i className="fa fa-ticket-alt"></i> All Tickets
+                <FaTicketAlt size={20}  /> <span className="hidden md:block">All tickets</span> 
                 </Link>
               </li>
             )}
@@ -69,7 +71,7 @@ const SideBar = () => {
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                  <i className="fa fa-times-circle"></i> Closed Tickets
+                <FaTimesCircle size={20} /> <span className="hidden md:block">closed Tickets</span> 
                 </Link>
               </li>
             )}
@@ -85,7 +87,7 @@ const SideBar = () => {
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                  <i className="fa fa-spinner"></i> Tickets in Progress
+                <FaSpinner size={20} /> <span className="hidden md:block">Tickets in progress</span> 
                 </Link>
               </li>
             )}
@@ -101,7 +103,7 @@ const SideBar = () => {
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                  <i className="fa fa-ticket-alt"></i> My Tickets
+                 <FaTicketAlt/> <span className="hidden md:block">My Tickets</span> 
                 </Link>
               </li>
             )}
