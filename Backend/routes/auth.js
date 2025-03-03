@@ -16,14 +16,13 @@ router.post("/signup", async (req, res) => {
     }
 
     const userRole = role || "user";
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({ name, email, password: hashedPassword, role: userRole });
     await user.save();
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user._id, name: user.name, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -31,6 +30,7 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({
       message: "User registered successfully!",
       token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -48,12 +48,16 @@ router.post("/login", async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user._id, name: user.name, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.json({ token });
+    res.json({
+      message: "Login successful!",
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+    });
   } catch (error) {
     res.status(500).json({ error: "Something went wrong!" });
   }
