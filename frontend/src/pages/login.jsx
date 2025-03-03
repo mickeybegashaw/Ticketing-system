@@ -54,6 +54,7 @@ const Login = () => {
         <h1 className="text-2xl font-bold">Welcome Back</h1>
         <form onSubmit={handleSubmit} className="mt-6">
           <input
+            required
             type="email"
             placeholder="Email"
             value={email}
@@ -61,6 +62,7 @@ const Login = () => {
             className="w-full p-2 my-2 border border-gray-300 rounded-md"
           />
           <input
+            required
             type="password"
             placeholder="Password"
             value={password}
@@ -75,13 +77,19 @@ const Login = () => {
             {loading ? "Logging in..." : "Login"}
           </button>
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          {success && <p className="text-green-500 text-sm">Login successful!</p>}
+          {success && (
+            <p className="text-green-500 text-sm">Login successful!</p>
+          )}
           <Link to="/signup" className="text-sky-600 text-sm">
             Don't have an account? Sign up
           </Link>
         </form>
       </div>
-      <img src={LoginImage} alt="log in image" className="w-[40%] hidden md:block" />
+      <img
+        src={LoginImage}
+        alt="log in image"
+        className="w-[40%] hidden md:block"
+      />
     </div>
   );
 };
