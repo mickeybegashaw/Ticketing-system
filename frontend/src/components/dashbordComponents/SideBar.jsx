@@ -1,11 +1,19 @@
 import AvaterImg from "../../assets/avater.png";
 import UseAuth from "../../hooks/useAuth";
-import { FaBars, FaTimes, FaTicketAlt, FaTimesCircle, FaSpinner, FaTachometerAlt } from "react-icons/fa";
+import {
+  FaBars,
+  FaTimes,
+  FaTicketAlt,
+  FaTimesCircle,
+  FaSpinner,
+  FaTachometerAlt,
+} from "react-icons/fa";
+import { MdLogout } from "react-icons/md";
 
 import { Link, useLocation } from "react-router-dom";
 
 const SideBar = () => {
-  const { user } = UseAuth();
+  const { user, logout } = UseAuth();
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
@@ -19,7 +27,9 @@ const SideBar = () => {
             alt="Avatar"
             className="w-6 h-6 md:w-12 md:h-12 rounded-full border-2 border-white"
           />
-          <span className="text-lg md:text-xl font-bold">{user?.role === "admin" ? "Admin" : "User"}</span>
+          <span className="text-base md:text-xl font-bold">
+            {user?.role === "admin" ? "Admin" : "User"}
+          </span>
         </div>
 
         <div className="hidden md:block mb-5 text-center text-sm text-gray-300">
@@ -34,13 +44,14 @@ const SideBar = () => {
             <li>
               <Link
                 to={user?.role === "admin" ? "/admin" : "/user"} // Conditional path based on role
-                className={`flex items-center gap-2 text-lg py-2 px-3 rounded-md transition-all ${
+                className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
                   isActive(user?.role === "admin" ? "/admin" : "/user")
                     ? "bg-white text-sky-600"
                     : "hover:bg-white hover:text-sky-600"
                 }`}
               >
-                <FaTachometerAlt size={20} /> <span className="hidden md:block">Dashboard</span> 
+                <FaTachometerAlt size={20} />{" "}
+                <span className="hidden md:block">Dashboard</span>
               </Link>
             </li>
 
@@ -49,13 +60,14 @@ const SideBar = () => {
               <li>
                 <Link
                   to="/admin/tickets"
-                  className={`flex items-center gap-2 text-lg py-2 px-3 rounded-md transition-all ${
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
                     isActive("/admin/tickets")
                       ? "bg-white text-sky-600"
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                <FaTicketAlt size={20}  /> <span className="hidden md:block">All tickets</span> 
+                  <FaTicketAlt size={20} />{" "}
+                  <span className="hidden md:block">All tickets</span>
                 </Link>
               </li>
             )}
@@ -65,13 +77,14 @@ const SideBar = () => {
               <li>
                 <Link
                   to="/admin/closed-tickets"
-                  className={`flex items-center gap-2 text-lg py-2 px-3 rounded-md transition-all ${
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
                     isActive("/admin/closed-tickets")
                       ? "bg-white text-sky-600"
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                <FaTimesCircle size={20} /> <span className="hidden md:block">closed Tickets</span> 
+                  <FaTimesCircle size={20} />{" "}
+                  <span className="hidden md:block">closed Tickets</span>
                 </Link>
               </li>
             )}
@@ -81,13 +94,14 @@ const SideBar = () => {
               <li>
                 <Link
                   to="/admin/in-progress-tickets"
-                  className={`flex items-center gap-2 text-lg py-2 px-3 rounded-md transition-all ${
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
                     isActive("/admin/in-progress-tickets")
                       ? "bg-white text-sky-600"
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                <FaSpinner size={20} /> <span className="hidden md:block">Tickets in progress</span> 
+                  <FaSpinner size={20} />{" "}
+                  <span className="hidden md:block">Tickets in progress</span>
                 </Link>
               </li>
             )}
@@ -97,16 +111,27 @@ const SideBar = () => {
               <li>
                 <Link
                   to="/user/tickets"
-                  className={`flex items-center gap-2 text-lg py-2 px-3 rounded-md transition-all ${
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
                     isActive("/user/tickets")
                       ? "bg-white text-sky-600"
                       : "hover:bg-white hover:text-sky-600"
                   }`}
                 >
-                 <FaTicketAlt/> <span className="hidden md:block">My Tickets</span> 
+                  <FaTicketAlt />{" "}
+                  <span className="hidden md:block">My Tickets</span>
                 </Link>
               </li>
             )}
+            <li
+              className={`flex items-center gap-2 text-base py-2 px-3 cursor-pointer rounded-md transition-all ${
+                isActive("/user/tickets")
+                  ? "bg-white text-sky-600"
+                  : "hover:bg-white hover:text-sky-600"
+              }`}
+              onClick={() => logout()}
+            >
+              <MdLogout /> <span className="hidden md:block">Log out</span>
+            </li>
           </ul>
         </div>
       </div>

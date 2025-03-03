@@ -16,7 +16,6 @@ import Inprogress from "./pages/DashboardPages/admin/Inprogress";
 import UserTickets from "./pages/DashboardPages/user/Tickes";
 const App = () => {
   const { user } = UseAuth();
-  console.log(user);
 
   return (
     <Router>
