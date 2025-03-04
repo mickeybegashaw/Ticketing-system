@@ -2,6 +2,17 @@ import DashboardLayout from "../../../layout/DashboardLayout";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { FaArrowCircleRight } from "react-icons/fa";
 import UseTicket from "../../../hooks/useTicket";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 const AdminDashboard = () => {
   const location = useLocation();
@@ -14,6 +25,12 @@ const AdminDashboard = () => {
     "/admin/opened-tickets",
   ];
   const isNestedRoute = nestedRoutes.includes(location.pathname);
+  const chartData = [
+    { name: "Total", value: tickets.length, color: "#2563eb" }, // Blue
+    { name: "Open", value: openTickets.length, color: "#22c55e" }, // Green
+    { name: "In Progress", value: inProgressTickets.length, color: "#facc15" }, // Yellow
+    { name: "Closed", value: closedTickets.length, color: "#dc2626" }, // Red
+  ];
 
   return (
     <DashboardLayout>
@@ -56,7 +73,9 @@ const AdminDashboard = () => {
 
             <div className="bg-yellow-600 text-black flex flex-col gap-3 w-[90%] md:w-[25%]">
               <div className="m-5 flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{inProgressTickets.length}</h1>
+                <h1 className="text-2xl font-bold">
+                  {inProgressTickets.length}
+                </h1>
                 <h3>In progress Tickets</h3>
               </div>
               <Link to="/admin/in-progress-tickets">
@@ -82,6 +101,47 @@ const AdminDashboard = () => {
                   </span>
                 </div>
               </Link>
+            </div>
+          </div>
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-10">
+            {/* Bar Chart */}
+            <div className="bg-white p-5 rounded-lg shadow-md w-full">
+              <h2 className="text-lg font-semibold mb-3">Ticket Statistics</h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value">
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Pie Chart */}
+            <div className="bg-white p-5 rounded-lg shadow-md w-full">
+              <h2 className="text-lg font-semibold mb-3">
+                Ticket Distribution
+              </h2>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={chartData}
+                    dataKey="value"
+                    nameKey="name"
+                    outerRadius={100}
+                  >
+                    {chartData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
