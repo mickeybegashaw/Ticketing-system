@@ -4,13 +4,20 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import authRoutes from "./routes/auth.js";
-import ticketRoute from './routes/tickets.js'
-
+import ticketRoute from "./routes/tickets.js";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+// Allow your frontend's origin
+const allowedOrigins = ["https://ticketing-system-gamma.vercel.app"];
 
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization",
+  })
+);
 app.use("/api/auth", authRoutes);
 app.use("/api/tickets", ticketRoute);
 
