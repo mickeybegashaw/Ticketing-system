@@ -40,11 +40,19 @@ const Tickets = () => {
                 </span>
               </div>
               <div className="mt-3">
-                <p className="text-sm text-gray-700">{ticket.description}</p>
+                <p className="text-sm text-gray-700 line-clamp-1">{ticket.description}</p>
               </div>
-              <div className="mt-3">
-                <span className="text-sm text-gray-400">
-                  Status: {ticket.status}
+              <div className="mt-5">
+                <span
+                  className={`text-sm text-white p-1 rounded ${
+                    ticket.status === "Open"
+                      ? "bg-red-900 animate-pulse"
+                      : ticket.status === "InProgress"
+                      ? "bg-yellow-600"
+                      : "bg-green-800"
+                  }`}
+                >
+                  {ticket.status}
                 </span>
               </div>
             </div>
