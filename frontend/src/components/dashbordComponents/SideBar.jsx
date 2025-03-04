@@ -1,6 +1,7 @@
 import AvaterImg from "../../assets/avater.png";
 import UseAuth from "../../hooks/useAuth";
 import { RiChatNewFill } from "react-icons/ri";
+import { IoMdAddCircle } from "react-icons/io";
 import {
   FaBars,
   FaTimes,
@@ -56,8 +57,8 @@ const SideBar = () => {
               </Link>
             </li>
 
-             {/* New tickets - Admin only */}
-             {user?.role === "admin" && (
+            {/* New tickets - Admin only */}
+            {user?.role === "admin" && (
               <li>
                 <Link
                   to="/admin/opened-tickets"
@@ -123,9 +124,23 @@ const SideBar = () => {
                 </Link>
               </li>
             )}
-           
 
             {/* User-specific link */}
+            {user?.role === "user" && (
+              <li>
+                <Link
+                  to="/user/add-ticket"
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
+                    isActive("/user/add-ticket")
+                      ? "bg-white text-sky-600"
+                      : "hover:bg-white hover:text-sky-600"
+                  }`}
+                >
+                  <IoMdAddCircle />{" "}
+                  <span className="hidden md:block">Add new Tickets</span>
+                </Link>
+              </li>
+            )}
             {user?.role === "user" && (
               <li>
                 <Link
@@ -142,11 +157,9 @@ const SideBar = () => {
               </li>
             )}
             <li
-              className={`flex items-center gap-2 text-base py-2 px-3 cursor-pointer rounded-md transition-all ${
-                isActive("/user/tickets")
-                  ? "bg-white text-sky-600"
-                  : "hover:bg-white hover:text-sky-600"
-              }`}
+              className={`flex items-center gap-2 text-base py-2 px-3 cursor-pointer rounded-md transition-all 
+                  hover:bg-white hover:text-sky-600
+              `}
               onClick={() => logout()}
             >
               <MdLogout /> <span className="hidden md:block">Log out</span>

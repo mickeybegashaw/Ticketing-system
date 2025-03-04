@@ -15,6 +15,7 @@ import Closedtickets from "./pages/DashboardPages/admin/Closedtickets";
 import Inprogress from "./pages/DashboardPages/admin/Inprogress";
 import UserTickets from "./pages/DashboardPages/user/Tickes";
 import OpenedTickets from "./pages/DashboardPages/admin/OpenedTickets";
+import AddnewTickets from "./pages/DashboardPages/user/AddnewTickets";
 const App = () => {
   const { user } = UseAuth();
 
@@ -51,6 +52,7 @@ const App = () => {
           }
         >
           <Route path="tickets" element={< UserTickets />} />
+          <Route path="add-ticket" element={< AddnewTickets />} />
         </Route>
 
         {/* Admin route with nested routes */}
