@@ -9,7 +9,7 @@ import ticketRoute from "./routes/tickets.js";
 const app = express();
 app.use(express.json());
 // Allow your frontend's origin
-const allowedOrigins = ["https://ticketing-system-gamma.vercel.app"];
+const allowedOrigins = ["https://ticketing-system-gamma.vercel.app", 'http://localhost:5173'];
 
 app.use(
   cors({
