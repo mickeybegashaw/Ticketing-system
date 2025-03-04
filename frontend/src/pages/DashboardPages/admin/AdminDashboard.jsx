@@ -1,15 +1,17 @@
 import DashboardLayout from "../../../layout/DashboardLayout";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { FaArrowCircleRight } from "react-icons/fa";
+import UseTicket from "../../../hooks/useTicket";
 
 const AdminDashboard = () => {
   const location = useLocation();
-
+  const { tickets, openTickets, closedTickets, inProgressTickets } =
+    UseTicket();
   const nestedRoutes = [
     "/admin/tickets",
     "/admin/closed-tickets",
     "/admin/in-progress-tickets",
-    "/admin/opened-tickets"
+    "/admin/opened-tickets",
   ];
   const isNestedRoute = nestedRoutes.includes(location.pathname);
 
@@ -18,12 +20,12 @@ const AdminDashboard = () => {
       {!isNestedRoute && (
         <div className="flex flex-col mt-24 p-5 w-full m-2">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
-            {/* analysis */}
+          {/* analysis */}
           <div className="flex flex-col md:flex-row gap-5 mt-5 w-full">
             {/* all ticket */}
             <div className="bg-blue-600 text-white flex flex-col gap-3 w-[90%] md:w-[25%]">
               <div className="m-5 flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{21}</h1>
+                <h1 className="text-2xl font-bold">{tickets.length}</h1>
                 <h3>Total Tickets</h3>
               </div>
               <Link to="/admin/tickets">
@@ -39,7 +41,7 @@ const AdminDashboard = () => {
             {/* new ticket */}
             <div className="bg-green-700 text-white flex flex-col gap-3 w-[90%] md:w-[25%]">
               <div className="m-5 flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{21}</h1>
+                <h1 className="text-2xl font-bold">{openTickets.length}</h1>
                 <h3>New Tickets</h3>
               </div>
               <Link to="/admin/opened-tickets">
@@ -54,7 +56,7 @@ const AdminDashboard = () => {
 
             <div className="bg-yellow-600 text-black flex flex-col gap-3 w-[90%] md:w-[25%]">
               <div className="m-5 flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{21}</h1>
+                <h1 className="text-2xl font-bold">{inProgressTickets.length}</h1>
                 <h3>In progress Tickets</h3>
               </div>
               <Link to="/admin/in-progress-tickets">
@@ -69,10 +71,10 @@ const AdminDashboard = () => {
 
             <div className="bg-red-800 text-white flex flex-col gap-3 w-[90%] md:w-[25%]">
               <div className="m-5 flex flex-col gap-2">
-                <h1 className="text-2xl font-bold">{21}</h1>
+                <h1 className="text-2xl font-bold">{closedTickets.length}</h1>
                 <h3>Closed Tickets</h3>
               </div>
-              <Link to="/admin/tickets">
+              <Link to="/admin/closed-tickets">
                 <div className="bg-red-600  bottom-0 p-2 flex gap-2 items-center justify-center">
                   more info{" "}
                   <span>
@@ -81,8 +83,6 @@ const AdminDashboard = () => {
                 </div>
               </Link>
             </div>
-
-
           </div>
         </div>
       )}

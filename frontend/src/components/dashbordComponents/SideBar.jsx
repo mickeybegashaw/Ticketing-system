@@ -20,7 +20,7 @@ const SideBar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="pt-20 p-3 md:p-6 bg-sky-600 text-white h-screen w-fit md:w-[20%] shadow-lg ">
+    <div className="pt-20 p-3 md:p-6 bg-sky-600 text-white h-f w-fit md:w-[20%] shadow-lg ">
       <div className="flex flex-col items-center mt-5">
         <div className="flex items-center flex-col md:flex-rol gap-3 mb-5 md:mt-16">
           <img

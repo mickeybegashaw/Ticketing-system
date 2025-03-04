@@ -4,30 +4,59 @@ const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
 const initialState = {
   tickets: [],
+  openTickets: [],
+  closedTickets: [],
+  inProgressTickets: [],
 };
 
 // Reducer Function
 const ticketReducer = (state, action) => {
   switch (action.type) {
-    case "SET_TICKETS":
-      return { ...state, tickets: action.payload };
-
-    case "ADD_TICKET":
-      return { ...state, tickets: [...state.tickets, action.payload] };
-
-    case "UPDATE_TICKET":
+    case "SET_TICKETS": {
+      const allTickets = action.payload;
       return {
         ...state,
-        tickets: state.tickets.map((ticket) =>
-          ticket.id === action.payload.id ? action.payload : ticket
-        ),
+        tickets: allTickets,
+        openTickets: allTickets.filter(ticket => ticket.status === "Open"),
+        closedTickets: allTickets.filter(ticket => ticket.status === "closed"),
+        inProgressTickets: allTickets.filter(ticket => ticket.status === "InProgress"),
       };
+    }
 
-    case "DELETE_TICKET":
+    case "ADD_TICKET": {
+      const newTickets = [...state.tickets, action.payload];
       return {
         ...state,
-        tickets: state.tickets.filter((ticket) => ticket.id !== action.payload),
+        tickets: newTickets,
+        openTickets: newTickets.filter(ticket => ticket.status === "Open"),
+        closedTickets: newTickets.filter(ticket => ticket.status === "closed"),
+        inProgressTickets: newTickets.filter(ticket => ticket.status === "InProgress"),
       };
+    }
+
+    case "UPDATE_TICKET": {
+      const updatedTickets = state.tickets.map(ticket =>
+        ticket.id === action.payload.id ? action.payload : ticket
+      );
+      return {
+        ...state,
+        tickets: updatedTickets,
+        openTickets: updatedTickets.filter(ticket => ticket.status === "Open"),
+        closedTickets: updatedTickets.filter(ticket => ticket.status === "closed"),
+        inProgressTickets: updatedTickets.filter(ticket => ticket.status === "InProgress"),
+      };
+    }
+
+    case "DELETE_TICKET": {
+      const filteredTickets = state.tickets.filter(ticket => ticket.id !== action.payload);
+      return {
+        ...state,
+        tickets: filteredTickets,
+        openTickets: filteredTickets.filter(ticket => ticket.status === "Open"),
+        closedTickets: filteredTickets.filter(ticket => ticket.status === "closed"),
+        inProgressTickets: filteredTickets.filter(ticket => ticket.status === "InProgress"),
+      };
+    }
 
     default:
       return state;
@@ -38,6 +67,7 @@ export const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ticketReducer, initialState);
+
   useEffect(() => {
     const fetchTickets = async () => {
       const token = localStorage.getItem("token");
@@ -71,7 +101,15 @@ export const TicketProvider = ({ children }) => {
 
   return (
     <TicketContext.Provider
-      value={{ tickets: state.tickets, addTicket, updateTicket, deleteTicket }}
+      value={{
+        tickets: state.tickets,
+        openTickets: state.openTickets,
+        closedTickets: state.closedTickets,
+        inProgressTickets: state.inProgressTickets,
+        addTicket,
+        updateTicket,
+        deleteTicket,
+      }}
     >
       {children}
     </TicketContext.Provider>
