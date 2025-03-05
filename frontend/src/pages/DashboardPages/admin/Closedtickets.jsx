@@ -41,7 +41,7 @@ const Closedtickets = () => {
           ))
         ) : (
           (
-            <p className="text-gray-500 text-center">No Closed tickets available.</p>
+            <p className="text-gray-500 mt-5">No Closed tickets available.</p>
           )
         )}
       </div>

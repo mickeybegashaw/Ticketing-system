@@ -54,7 +54,7 @@ const Inprogress = () => {
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center">
+          <p className="text-gray-500 mt-5">
             No Inprogress tickets available.
           </p>
         )}
