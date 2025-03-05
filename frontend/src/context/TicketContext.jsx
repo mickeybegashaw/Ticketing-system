@@ -85,12 +85,12 @@ export const TicketProvider = ({ children }) => {
     async (userId) => {
       try {
         const response = await axios.get(
-          `${baseUrl}/api/tickets/user/${userId}`,
+          `${baseUrl}/api/tickets/${userId}`,
           {
             headers: { Authorization: `Bearer ${authToken}` },
           }
         );
-        return response.data; // Return the fetched user-specific tickets
+        return response.data; 
       } catch (error) {
         console.error("Error fetching user tickets:", error);
         toast.error("Failed to fetch user tickets. Please try again later.");
