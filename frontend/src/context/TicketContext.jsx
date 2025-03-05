@@ -25,7 +25,7 @@ const ticketReducer = (state, action) => {
       return {
         ...state,
         tickets: state.tickets.map((ticket) =>
-          ticket.id === action.payload.id ? action.payload : ticket
+          ticket._id === action.payload._id ? action.payload : ticket
         ),
       };
     case "DELETE_TICKET":
@@ -85,10 +85,10 @@ export const TicketProvider = ({ children }) => {
   }, [authToken]);
 
   // Update Ticket
-  const updateTicket = useCallback(async (updatedTicket) => {
+  const updateTicket = useCallback(async (updatedTicket,id) => {
     try {
       const response = await axios.put(
-        `${baseUrl}/api/tickets/${updatedTicket.id}`,
+        `${baseUrl}/api/tickets/${id}`,
         updatedTicket,
         {
           headers: {

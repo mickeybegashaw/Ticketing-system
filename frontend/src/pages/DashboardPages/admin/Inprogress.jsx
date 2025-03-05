@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Skeleton from "../../../components/ui/Skeleton";
 
 const Inprogress = () => {
-  const { inProgressTickets } = UseTicket();
+  const { inProgressTickets,updateTicket } = UseTicket();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,6 +13,10 @@ const Inprogress = () => {
     }
   }, [inProgressTickets]);
 
+  const handelUpdateClosed = (id) => {
+    const updatedTicket = {  status: "closed" };
+    updateTicket(updatedTicket, id);
+  };
 
   return (
     <div className="flex flex-col mt-24 p-5 w-full m-2">
@@ -41,10 +45,9 @@ const Inprogress = () => {
               <div className="mt-3">
                 <p className="text-sm text-gray-700">{ticket.description}</p>
               </div>
-              <div className="mt-3">
-                <span className="text-sm text-gray-400">
-                  Status: {ticket.status}
-                </span>
+              <div className="mt-7 flex gap-3 text-sm text-white ">
+             <button className="bg-green-600/65 hover:bg-green-600 py-1 px-2 rounded-2xl" onClick={()=>handelUpdateClosed(ticket._id)}>Mark as Closed</button>
+          
               </div>
             </div>
           ))

@@ -11,17 +11,19 @@ import {
   FaTachometerAlt,
 } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
-
+import UseTicket from "../../hooks/useTicket";
 import { Link, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   const { user, logout } = UseAuth();
+  const { tickets, openTickets, closedTickets, inProgressTickets } =
+    UseTicket();
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="pt-20 p-3 md:p-6 bg-sky-600 text-white h-f w-fit md:w-[20%] shadow-lg ">
+    <div className="pt-20 p-3 md:p-4 bg-sky-600 text-white h-f w-fit md:w-[25%] shadow-lg ">
       <div className="flex flex-col items-center mt-5">
         <div className="flex items-center flex-col md:flex-rol gap-3 mb-5 md:mt-16">
           <img
@@ -69,41 +71,10 @@ const SideBar = () => {
                   }`}
                 >
                   <RiChatNewFill size={20} />{" "}
-                  <span className="hidden md:block">New Tickets</span>
-                </Link>
-              </li>
-            )}
-
-            {/* All Tickets link - Admin only */}
-            {user?.role === "admin" && (
-              <li>
-                <Link
-                  to="/admin/tickets"
-                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
-                    isActive("/admin/tickets")
-                      ? "bg-white text-sky-600"
-                      : "hover:bg-white hover:text-sky-600"
-                  }`}
-                >
-                  <FaTicketAlt size={20} />{" "}
-                  <span className="hidden md:block">All tickets</span>
-                </Link>
-              </li>
-            )}
-
-            {/* Closed Tickets link - Admin only */}
-            {user?.role === "admin" && (
-              <li>
-                <Link
-                  to="/admin/closed-tickets"
-                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
-                    isActive("/admin/closed-tickets")
-                      ? "bg-white text-sky-600"
-                      : "hover:bg-white hover:text-sky-600"
-                  }`}
-                >
-                  <FaTimesCircle size={20} />{" "}
-                  <span className="hidden md:block">closed Tickets</span>
+                  <div className="flex justify-between w-full">
+                    <span className="hidden md:block">Opened Tickets</span>
+                    <span>{openTickets.length}</span>
+                  </div>
                 </Link>
               </li>
             )}
@@ -120,7 +91,50 @@ const SideBar = () => {
                   }`}
                 >
                   <FaSpinner size={20} />{" "}
-                  <span className="hidden md:block">Tickets in progress</span>
+                  <div className="flex justify-between w-full">
+                    <span className="hidden md:block">Tickets In Progress</span>
+                    <span>{inProgressTickets.length}</span>
+                  </div>
+                </Link>
+              </li>
+            )}
+
+            {/* All Tickets link - Admin only */}
+            {user?.role === "admin" && (
+              <li>
+                <Link
+                  to="/admin/tickets"
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
+                    isActive("/admin/tickets")
+                      ? "bg-white text-sky-600"
+                      : "hover:bg-white hover:text-sky-600"
+                  }`}
+                >
+                  <FaTicketAlt size={20} />{" "}
+                  <div className="flex justify-between w-full">
+                    <span className="hidden md:block">All Tickets</span>
+                    <span>{tickets.length}</span>
+                  </div>
+                </Link>
+              </li>
+            )}
+
+            {/* Closed Tickets link - Admin only */}
+            {user?.role === "admin" && (
+              <li>
+                <Link
+                  to="/admin/closed-tickets"
+                  className={`flex items-center gap-2 text-base py-2 px-3 rounded-md transition-all ${
+                    isActive("/admin/closed-tickets")
+                      ? "bg-white text-sky-600"
+                      : "hover:bg-white hover:text-sky-600"
+                  }`}
+                >
+                  <FaTimesCircle size={20} />{" "}
+                  <div className="flex justify-between w-full">
+                    <span className="hidden md:block">Closed Tickets</span>
+                    <span>{closedTickets.length}</span>
+                  </div>
                 </Link>
               </li>
             )}
