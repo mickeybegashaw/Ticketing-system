@@ -4,24 +4,39 @@ import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "../../../components/ui/Skeleton";
 import toast from "react-hot-toast";
-import { MdDelete  } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 const UserTickets = () => {
-  const { fetchUserTickets , deleteTicket} = UseTicket();
+  const { fetchUserTickets, deleteTicket } = UseTicket();
   const { user } = UseAuth();
   const [userTickets, setUserTickets] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     if (user?.id) {
-      try {
-        fetchUserTickets(user.id).then((tickets) => setUserTickets(tickets));
-        setLoading(false)
-      } catch (error) {
-        toast.error("Failed to fetch tickets");
-      }
+      fetchUserTickets(user.id)
+        .then((tickets) => setUserTickets(tickets))
+        .catch(() => toast.error("Failed to fetch tickets"))
+        .finally(() => setLoading(false)); 
     }
   }, [user, fetchUserTickets]);
+
+  const handleDelete = (ticketId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this ticket?"
+    );
+    if (isConfirmed) {
+      deleteTicket(ticketId)
+        .then(() => {
+          setUserTickets((prevTickets) =>
+            prevTickets.filter((ticket) => ticket._id !== ticketId)
+          );
+          toast.success("Ticket deleted successfully");
+        })
+        .catch(() => toast.error("Failed to delete ticket"));
+    }
+  };
+
   return (
     <div className="flex flex-col mt-24 p-5 w-full h-screen m-2">
       <h1 className="text-2xl font-semibold">My tickets</h1>
@@ -63,16 +78,17 @@ const UserTickets = () => {
                 >
                   {ticket.status}
                 </span>
-                <MdDelete onClick={()=>deleteTicket(ticket._id)}  size={20}  color="#82181a"/>
-
+                <MdDelete
+                  onClick={() => handleDelete(ticket._id)}
+                  size={20}
+                  color="#82181a"
+                  className="cursor-pointer"
+                />
               </div>
             </div>
           ))
         ) : (
-          // If no tickets exist after loading, show this message
-          !loading && (
-            <p className="text-gray-500 mt-5">No tickets available.</p>
-          )
+          <p className="text-gray-500 mt-5">No tickets available.</p>
         )}
       </div>
     </div>
