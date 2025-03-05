@@ -16,11 +16,22 @@ import Inprogress from "./pages/DashboardPages/admin/Inprogress";
 import UserTickets from "./pages/DashboardPages/user/Tickes";
 import OpenedTickets from "./pages/DashboardPages/admin/OpenedTickets";
 import AddnewTickets from "./pages/DashboardPages/user/AddnewTickets";
+import { Toaster } from "react-hot-toast";
+
 const App = () => {
   const { user } = UseAuth();
 
   return (
     <Router>
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          style: {
+            background: "#4c73b8", 
+            color: "#fff", 
+          },
+        }}
+      />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
@@ -51,8 +62,8 @@ const App = () => {
             )
           }
         >
-          <Route path="tickets" element={< UserTickets />} />
-          <Route path="add-ticket" element={< AddnewTickets />} />
+          <Route path="tickets" element={<UserTickets />} />
+          <Route path="add-ticket" element={<AddnewTickets />} />
         </Route>
 
         {/* Admin route with nested routes */}
