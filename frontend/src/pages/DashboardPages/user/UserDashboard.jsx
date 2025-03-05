@@ -17,7 +17,7 @@ const UserDashboard = () => {
           <div className="flex flex-col md:flex-row gap-5 mt-5 w-full">
             <Link
               to="/user/tickets"
-              className="bg-white w-1/2 p-5 rounded-lg shadow-md"
+              className="bg-white w-full md:w-1/2 p-5 rounded-lg shadow-md"
             >
               <div>
                 <h1 className="text-lg md:text-xl font-semibold">
@@ -33,7 +33,7 @@ const UserDashboard = () => {
             </Link>
             <Link
               to="/user/add-ticket"
-              className="bg-white w-1/2 p-5 rounded-lg shadow-md"
+              className="bg-white w-full md:w-1/2 p-5 rounded-lg shadow-md"
             >
               <div>
                 <h1 className="text-lg md:text-xl font-semibold">
