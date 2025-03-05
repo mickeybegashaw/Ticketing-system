@@ -34,6 +34,16 @@ router.get("/", authMiddleware, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// Get Tickets by userId
+router.get("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const tickets = await Ticket.find({ userId: userId }); 
+    res.status(200).json(tickets);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user tickets" });
+  }
+});
 
 // Update Ticket
 router.put("/:id", authMiddleware, async (req, res) => {
