@@ -5,7 +5,7 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 import LoginImage from '../../assets/login.svg'
 const Login = () => {
-  const { setUser } = UseAuth();
+  const { setUser ,setToken} = UseAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -29,7 +29,7 @@ const Login = () => {
 
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
-
+        setToken(token)
         setUser(user);
         setSuccess(true);
       } else {

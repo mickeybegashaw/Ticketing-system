@@ -6,7 +6,7 @@ import axios from "axios";
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
 const Signup = () => {
-  const { setUser } = UseAuth();
+  const { setUser , setToken} = UseAuth();
   const [role, setRole] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,7 +42,7 @@ const Signup = () => {
 
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
-
+        setToken(token)
         setUser(user);
         setSuccess(true);
       } else {

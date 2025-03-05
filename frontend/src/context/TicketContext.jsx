@@ -4,11 +4,11 @@ import {
   useEffect,
   useMemo,
   useCallback,
-  useState,
 } from "react";
 import axios from "axios";
 import UseAuth from "../hooks/useAuth";
 import { toast } from "react-hot-toast";
+
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
 const initialState = {
@@ -16,12 +16,14 @@ const initialState = {
   error: null,
 };
 
+// Filter tickets by status
 const filterTickets = (tickets) => ({
   openTickets: tickets.filter((ticket) => ticket.status === "Open"),
   closedTickets: tickets.filter((ticket) => ticket.status === "closed"),
   inProgressTickets: tickets.filter((ticket) => ticket.status === "InProgress"),
 });
 
+// Ticket Reducer
 const ticketReducer = (state, action) => {
   switch (action.type) {
     case "SET_TICKETS":
@@ -38,7 +40,7 @@ const ticketReducer = (state, action) => {
     case "DELETE_TICKET":
       return {
         ...state,
-        tickets: state.tickets.filter((ticket) => ticket.id !== action.payload),
+        tickets: state.tickets.filter((ticket) => ticket._id !== action.payload),
       };
     case "SET_ERROR":
       return { ...state, error: action.payload };
@@ -51,62 +53,60 @@ export const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ticketReducer, initialState);
-  const { token } = UseAuth();
-  const [authToken, setAuthToken] = useState(
-    token || localStorage.getItem("token")
-  );
+  const { token } = UseAuth(); 
+
   const { openTickets, closedTickets, inProgressTickets } = useMemo(
     () => filterTickets(state.tickets),
     [state.tickets]
   );
 
-  // Fetch tickets on mount
+  // Fetch all tickets
+  const fetchTickets = useCallback(async () => {
+    if (!token) return;
+    try {
+      const response = await axios.get(`${baseUrl}/api/tickets`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      dispatch({ type: "SET_TICKETS", payload: response.data });
+    } catch (error) {
+      console.error("Error fetching tickets:", error);
+      dispatch({
+        type: "SET_ERROR",
+        payload: "Failed to fetch tickets. Please try again later.",
+      });
+    }
+  }, [token]);
+
   useEffect(() => {
-    const fetchTickets = async () => {
-      try {
-        const response = await axios.get(`${baseUrl}/api/tickets`, {
-          headers: { Authorization: `Bearer ${authToken}` },
-        });
-        dispatch({ type: "SET_TICKETS", payload: response.data });
-      } catch (error) {
-        console.error("Error fetching tickets:", error);
-        dispatch({
-          type: "SET_ERROR",
-          payload: "Failed to fetch tickets. Please try again later.",
-        });
-      }
-    };
-
     fetchTickets();
-  }, [authToken]);
+  }, [fetchTickets]);
 
-  // Fetch Tickets for a Single User
+  // Fetch user-specific only tickets
   const fetchUserTickets = useCallback(
     async (userId) => {
+      if (!token) return [];
       try {
-        const response = await axios.get(
-          `${baseUrl}/api/tickets/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${authToken}` },
-          }
-        );
-        return response.data; 
+        const response = await axios.get(`${baseUrl}/api/tickets/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
       } catch (error) {
         console.error("Error fetching user tickets:", error);
         toast.error("Failed to fetch user tickets. Please try again later.");
         return [];
       }
     },
-    [authToken]
+    [token]
   );
 
-  // Add Ticket
+  // Add a new ticket
   const addTicket = useCallback(
     async (newTicket) => {
+      if (!token) return;
       try {
         const response = await axios.post(`${baseUrl}/api/tickets`, newTicket, {
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -117,19 +117,20 @@ export const TicketProvider = ({ children }) => {
         toast.error("Failed to add ticket. Please try again later.");
       }
     },
-    [authToken]
+    [token]
   );
 
-  // Update Ticket
+  // Update a ticket
   const updateTicket = useCallback(
     async (updatedTicket, id) => {
+      if (!token) return;
       try {
         const response = await axios.put(
           `${baseUrl}/api/tickets/${id}`,
           updatedTicket,
           {
             headers: {
-              Authorization: `Bearer ${authToken}`,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
           }
@@ -141,15 +142,16 @@ export const TicketProvider = ({ children }) => {
         toast.error("Failed to update ticket. Please try again later.");
       }
     },
-    [authToken]
+    [token]
   );
 
-  // Delete Ticket
+  // Delete a ticket
   const deleteTicket = useCallback(
     async (ticketId) => {
+      if (!token) return;
       try {
         await axios.delete(`${baseUrl}/api/tickets/${ticketId}`, {
-          headers: { Authorization: `Bearer ${authToken}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         dispatch({ type: "DELETE_TICKET", payload: ticketId });
         toast.success("Ticket deleted successfully");
@@ -158,7 +160,7 @@ export const TicketProvider = ({ children }) => {
         toast.error("Failed to delete ticket. Please try again later.");
       }
     },
-    [authToken]
+    [token]
   );
 
   return (
@@ -168,11 +170,12 @@ export const TicketProvider = ({ children }) => {
         openTickets,
         closedTickets,
         inProgressTickets,
-        error: state.error, // Expose error in context
+        error: state.error,
         addTicket,
         updateTicket,
         deleteTicket,
-        fetchUserTickets
+        fetchUserTickets,
+        fetchTickets,
       }}
     >
       {children}

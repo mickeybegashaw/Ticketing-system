@@ -40,9 +40,13 @@ const TicketCard = ({ title, count, color, link }) => (
 
 const AdminDashboard = () => {
   const location = useLocation();
-  const { tickets, openTickets, closedTickets, inProgressTickets } =
+  const { tickets, openTickets, closedTickets, inProgressTickets,fetchTickets } =
     useTicket();
   const [loading, setLoading] = useState(tickets.length === 0);
+
+  useEffect(()=>{
+    fetchTickets()
+  },[])
 
   useEffect(() => {
     setLoading(tickets.length === 0);
