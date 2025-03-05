@@ -67,7 +67,6 @@ router.put("/:id", authMiddleware, async (req, res) => {
 // Delete Ticket
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
-    // Only admin or the ticket owner can delete the ticket
     const ticket = await Ticket.findById(req.params.id);
     if (!ticket) {
       return res.status(404).json({ error: "Ticket not found" });

@@ -73,7 +73,7 @@ const AdminDashboard = () => {
         <div className="flex flex-col mt-24 p-5 w-full m-2">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-          {/* Analysis Section */}
+          {/* basic Analysis Section */}
           {loading ? (
             <Skeleton />
           ) : (

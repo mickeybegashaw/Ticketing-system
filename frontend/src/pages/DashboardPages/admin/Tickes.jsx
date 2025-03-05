@@ -9,11 +9,10 @@ const Tickets = () => {
 
   useEffect(() => {
     if (tickets.length > 0) {
-      setLoading(false); // Stop loading when tickets are fetched
+      setLoading(false); 
     }
   }, [tickets]);
 
-  console.log("Fetched tickets:", tickets);
 
   return (
     <div className="flex flex-col mt-24 p-5 w-full m-2">
@@ -58,7 +57,6 @@ const Tickets = () => {
             </div>
           ))
         ) : (
-          // If no tickets exist after loading, show this message
           !loading && (
             <p className="text-gray-500 text-center">No tickets available.</p>
           )

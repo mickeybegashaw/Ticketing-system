@@ -22,7 +22,6 @@ const UserTickets = () => {
       }
     }
   }, [user, fetchUserTickets]);
-console.log(userTickets)
   return (
     <div className="flex flex-col mt-24 p-5 w-full h-screen m-2">
       <h1 className="text-2xl font-semibold">My tickets</h1>
