@@ -49,7 +49,15 @@ const App = () => {
             )
           }
         />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={  user ? (
+              user.role === "admin" ? (
+                <Navigate to="/admin" />
+              ) : (
+                <Navigate to="/user" />
+              )
+            ) : (
+              <SignUp />
+            )} />
 
         {/* Protected Routes */}
         <Route
