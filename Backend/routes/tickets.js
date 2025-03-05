@@ -64,4 +64,25 @@ router.put("/:id", authMiddleware, async (req, res) => {
   }
 });
 
+// Delete Ticket
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    // Only admin or the ticket owner can delete the ticket
+    const ticket = await Ticket.findById(req.params.id);
+    if (!ticket) {
+      return res.status(404).json({ error: "Ticket not found" });
+    }
+
+    if (req.user.role !== "admin" && ticket.userId.toString() !== req.user.userId) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+
+    await Ticket.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Ticket deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 export default router;

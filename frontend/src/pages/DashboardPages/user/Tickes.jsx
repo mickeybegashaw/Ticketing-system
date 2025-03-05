@@ -4,8 +4,10 @@ import { useState, useEffect } from "react";
 import { formatDistanceToNow } from "date-fns";
 import Skeleton from "../../../components/ui/Skeleton";
 import toast from "react-hot-toast";
+import { MdDelete  } from "react-icons/md";
+
 const UserTickets = () => {
-  const { fetchUserTickets } = UseTicket();
+  const { fetchUserTickets , deleteTicket} = UseTicket();
   const { user } = UseAuth();
   const [userTickets, setUserTickets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,7 +52,7 @@ console.log(userTickets)
                   {ticket.description}
                 </p>
               </div>
-              <div className="mt-5">
+              <div className="mt-5 flex justify-between">
                 <span
                   className={`text-sm text-white p-1 rounded ${
                     ticket.status === "Open"
@@ -62,6 +64,8 @@ console.log(userTickets)
                 >
                   {ticket.status}
                 </span>
+                <MdDelete onClick={()=>deleteTicket(ticket._id)}  size={20}  color="#82181a"/>
+
               </div>
             </div>
           ))
