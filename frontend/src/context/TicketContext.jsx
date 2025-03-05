@@ -1,63 +1,40 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer, useEffect, useMemo, useCallback, useState } from "react";
 import axios from "axios";
+import UseAuth from "../hooks/useAuth";
+
 const baseUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
 const initialState = {
   tickets: [],
-  openTickets: [],
-  closedTickets: [],
-  inProgressTickets: [],
+  error: null,
 };
 
-// Reducer Function
+const filterTickets = (tickets) => ({
+  openTickets: tickets.filter((ticket) => ticket.status === "Open"),
+  closedTickets: tickets.filter((ticket) => ticket.status === "closed"),
+  inProgressTickets: tickets.filter((ticket) => ticket.status === "InProgress"),
+});
+
 const ticketReducer = (state, action) => {
   switch (action.type) {
-    case "SET_TICKETS": {
-      const allTickets = action.payload;
+    case "SET_TICKETS":
+      return { ...state, tickets: action.payload, error: null };
+    case "ADD_TICKET":
+      return { ...state, tickets: [...state.tickets, action.payload] };
+    case "UPDATE_TICKET":
       return {
         ...state,
-        tickets: allTickets,
-        openTickets: allTickets.filter(ticket => ticket.status === "Open"),
-        closedTickets: allTickets.filter(ticket => ticket.status === "closed"),
-        inProgressTickets: allTickets.filter(ticket => ticket.status === "InProgress"),
+        tickets: state.tickets.map((ticket) =>
+          ticket.id === action.payload.id ? action.payload : ticket
+        ),
       };
-    }
-
-    case "ADD_TICKET": {
-      const newTickets = [...state.tickets, action.payload];
+    case "DELETE_TICKET":
       return {
         ...state,
-        tickets: newTickets,
-        openTickets: newTickets.filter(ticket => ticket.status === "Open"),
-        closedTickets: newTickets.filter(ticket => ticket.status === "closed"),
-        inProgressTickets: newTickets.filter(ticket => ticket.status === "InProgress"),
+        tickets: state.tickets.filter((ticket) => ticket.id !== action.payload),
       };
-    }
-
-    case "UPDATE_TICKET": {
-      const updatedTickets = state.tickets.map(ticket =>
-        ticket.id === action.payload.id ? action.payload : ticket
-      );
-      return {
-        ...state,
-        tickets: updatedTickets,
-        openTickets: updatedTickets.filter(ticket => ticket.status === "Open"),
-        closedTickets: updatedTickets.filter(ticket => ticket.status === "closed"),
-        inProgressTickets: updatedTickets.filter(ticket => ticket.status === "InProgress"),
-      };
-    }
-
-    case "DELETE_TICKET": {
-      const filteredTickets = state.tickets.filter(ticket => ticket.id !== action.payload);
-      return {
-        ...state,
-        tickets: filteredTickets,
-        openTickets: filteredTickets.filter(ticket => ticket.status === "Open"),
-        closedTickets: filteredTickets.filter(ticket => ticket.status === "closed"),
-        inProgressTickets: filteredTickets.filter(ticket => ticket.status === "InProgress"),
-      };
-    }
-
+    case "SET_ERROR":
+      return { ...state, error: action.payload };
     default:
       return state;
   }
@@ -67,45 +44,85 @@ export const TicketContext = createContext();
 
 export const TicketProvider = ({ children }) => {
   const [state, dispatch] = useReducer(ticketReducer, initialState);
+  const { token } =  UseAuth();
+  const [authToken, setAuthToken] = useState(token || localStorage.getItem("token"));
+  const { openTickets, closedTickets, inProgressTickets } = useMemo(
+    () => filterTickets(state.tickets),
+    [state.tickets]
+  );
 
+  // Fetch tickets on mount
   useEffect(() => {
     const fetchTickets = async () => {
-      const token = localStorage.getItem("token");
+
       try {
         const response = await axios.get(`${baseUrl}/api/tickets`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${authToken}` },
         });
-        const data = response.data;
-        dispatch({ type: "SET_TICKETS", payload: data });
+        dispatch({ type: "SET_TICKETS", payload: response.data });
       } catch (error) {
         console.error("Error fetching tickets:", error);
+        dispatch({ type: "SET_ERROR", payload: "Failed to fetch tickets. Please try again later." });
       }
     };
 
     fetchTickets();
-  }, []);
+  }, [authToken]);
 
-  const addTicket = (newTicket) => {
-    dispatch({ type: "ADD_TICKET", payload: newTicket });
-  };
+  // Add Ticket
+  const addTicket = useCallback(async (newTicket) => {
+    try {
+      const response = await axios.post(`${baseUrl}/api/tickets`, newTicket, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      dispatch({ type: "ADD_TICKET", payload: response.data });
+    } catch (error) {
+      console.error("Error adding ticket:", error);
+    }
+  }, [authToken]);
 
-  const updateTicket = (updatedTicket) => {
-    dispatch({ type: "UPDATE_TICKET", payload: updatedTicket });
-  };
+  // Update Ticket
+  const updateTicket = useCallback(async (updatedTicket) => {
+    try {
+      const response = await axios.put(
+        `${baseUrl}/api/tickets/${updatedTicket.id}`,
+        updatedTicket,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch({ type: "UPDATE_TICKET", payload: response.data });
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+    }
+  }, [authToken]);
 
-  const deleteTicket = (ticketId) => {
-    dispatch({ type: "DELETE_TICKET", payload: ticketId });
-  };
+  // Delete Ticket
+  const deleteTicket = useCallback(async (ticketId) => {
+    try {
+      await axios.delete(`${baseUrl}/api/tickets/${ticketId}`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      dispatch({ type: "DELETE_TICKET", payload: ticketId });
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
+    }
+  }, [authToken]);
 
   return (
     <TicketContext.Provider
       value={{
         tickets: state.tickets,
-        openTickets: state.openTickets,
-        closedTickets: state.closedTickets,
-        inProgressTickets: state.inProgressTickets,
+        openTickets,
+        closedTickets,
+        inProgressTickets,
+        error: state.error, // Expose error in context
         addTicket,
         updateTicket,
         deleteTicket,

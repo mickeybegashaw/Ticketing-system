@@ -61,7 +61,9 @@ const AdminDashboard = () => {
     <Cell key={`cell-${index}`} fill={entry.color} />
   ));
 
+  
   return (
+    
     <DashboardLayout>
       {!isNestedRoute && (
         <div className="flex flex-col mt-24 p-5 w-full m-2">
