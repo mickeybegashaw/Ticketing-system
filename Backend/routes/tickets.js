@@ -38,7 +38,7 @@ router.get("/", authMiddleware, async (req, res) => {
 router.get("/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const tickets = await Ticket.find({ userId: userId }); 
+    const tickets = await Ticket.find({ userId: userId }).sort({ createdAt: -1 }) // Newest first; 
     res.status(200).json(tickets);
   } catch (error) {
     res.status(500).json({ message: "Error fetching user tickets" });
