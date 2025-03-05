@@ -80,6 +80,26 @@ export const TicketProvider = ({ children }) => {
     fetchTickets();
   }, [authToken]);
 
+  // Fetch Tickets for a Single User
+  const fetchUserTickets = useCallback(
+    async (userId) => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}/api/tickets/user/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${authToken}` },
+          }
+        );
+        return response.data; // Return the fetched user-specific tickets
+      } catch (error) {
+        console.error("Error fetching user tickets:", error);
+        toast.error("Failed to fetch user tickets. Please try again later.");
+        return [];
+      }
+    },
+    [authToken]
+  );
+
   // Add Ticket
   const addTicket = useCallback(
     async (newTicket) => {
@@ -152,6 +172,7 @@ export const TicketProvider = ({ children }) => {
         addTicket,
         updateTicket,
         deleteTicket,
+        fetchUserTickets
       }}
     >
       {children}
