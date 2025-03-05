@@ -21,16 +21,20 @@ const DashboardHeader = () => {
         </Link>
         <div className="flex gap-3 md:gap-9 items-center relative">
           <div
-            className="relative w-20 p-5"
+            className="relative w-fit p-5 flex "
             onMouseEnter={() => setIsDropdownOpen(true)} 
             onMouseLeave={() => setIsDropdownOpen(false)} 
           >
             {/* Avatar Image */}
+            <div className="flex gap-3 items-center ">
+
             <img
               className="w-8 rounded-full cursor-pointer"
               src={AvaterImg}
               alt="Avatar"
             />
+            <span className="text-xs md:text-sm">{user.name}</span>
+            </div>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
                 <div className="p-4">
